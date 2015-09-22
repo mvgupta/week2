@@ -5,3 +5,6 @@ IN this module we begin the exploration of machine learning. The student should 
 * What a model is -- both conceptually and mathematically 
 * What 3 things do all ML algorithms share in common? 
 * How Models are Evaluated?
+
+
+I am making some minor changes.
