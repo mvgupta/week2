@@ -47,9 +47,12 @@ Don't forget to show your works, plots included.
 
 When speaking of Machine Learning, there are two functions or algorithms involved.
 Describe and differentiate the algorithms from the function.
-
+--> A function is a program/module/block of code that takes in one or more inputs and gives you a desired output. On the other hand an algorithm is a precise step-by-step plan for a computational procedure which may involve multiple algorithms or functions with in 
 
 # 2. RMSE and MAE
 
-Why is RMSE preferrable to MAE?  
+Why is RMSE preferrable to MAE? 
+--> RMSE is preferrable to MAE when we need more sensitivity towards occasional large error, the squaring process gives disproportionate weight to very large errors.
+
 When is MAE better? 
+-->  If an occasional large error does not effect your model/ decision 
