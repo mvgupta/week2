@@ -1,21 +1,90 @@
 # Boston Housing
+#
+# The *mlbench* package contains the data set `BostonHousing`. 
+#
+# Create a linear regression model that predicts the medium home value of the census tract as a 
+# function of the relevant predictors. Please refer to the process diagram from class. Don't forget to 
+# examine the response and predictors variable using graphical and other means.  Show your work.
 
-The *mlbench* package contains the data set `BostonHousing`. 
-
-Create a linear regression model that predicts the medium home value of the census tract as a function of the relevant predictors. Please refer to the process diagram from class. Don't forget to examine the response and predictors variable using graphical and other means.  Show your work.
-
-This is a `rmarkdown` Document. You can use `rmarkdown` to produce a Word Doc
-file, a presentation, html file, etc. Please just submit the code.
-
-
-```r
 library(mlbench)
 library(magrittr)
 library(ggplot2)
+library(MASS)
 data(BostonHousing)
 
-# Place your code here:
+# Understanding the distribution of the Independent Variables
+qplot(BostonHousing$crim )
+qplot(BostonHousing$zn)
+qplot(BostonHousing$indus)
+qplot(BostonHousing$chas)
+qplot(BostonHousing$nox)
+qplot(BostonHousing$rm)
+qplot(BostonHousing$age)
+qplot(BostonHousing$dis)
+qplot(BostonHousing$rad)
+qplot( BostonHousing$tax)
+qplot(BostonHousing$ptratio)
+qplot(BostonHousing$b)
+qplot(BostonHousing$lstat)
 
+qplot(BostonHousing$medv)
+
+# Taking a look at the realtionship of the various Independent Variables with the Dependent Variable
+ggplot( aes(x=crim, y=medv), data=BostonHousing ) + geom_point() + geom_smooth( method=lm )
+ggplot( aes(x=zn, y=medv), data=BostonHousing ) + geom_point() + geom_smooth( method=lm )
+ggplot( aes(x=rm, y=medv), data=BostonHousing ) + geom_point() + geom_smooth( method=lm )
+
+# Creating a Regression Model with one Predictor at a time
+fit.1 <- lm( medv ~ dis, data = BostonHousing )
+summary (fit.1)
+
+# Creating a Regression Model with more than one Predictor at a time
+fit.2 <- lm( medv ~ dis + tax + lstat, data = BostonHousing )
+summary(fit.2)
+
+# Creating a Regression Model with all Predictors 
+fit.3 <- lm( medv ~ ., data = BostonHousing )
+summary(fit.3)
+
+# Removing teh insignificant Predictors for the Regression Model
+fit.4 <- lm( medv ~ . - indus -age, data = BostonHousing )
+summary(fit.4)
+
+
+# Creating Root mean square function
+rmse <- function(y, yhat) {
+  sqrt( mean( (y - yhat) ^2 ) )
+}
+
+# Calculating Root Mean Square Error 
+rmse(fit.1$fitted.values, BostonHousing$medv)
+rmse(fit.2$fitted.values, BostonHousing$medv)
+rmse(fit.3$fitted.values, BostonHousing$medv)
+rmse(fit.4$fitted.values, BostonHousing$medv)
+
+# fit.3 has the lowest RMSE not very different from fit.4 though
+
+summary(fit.1)
+summary(fit.2)
+summary(fit.3)
+summary(fit.4) # Seems to be the best
+
+# Plotting fit.3
+compare_dists( observed=BostonHousing$medv, fitted=fit.4$fitted.values ) 
++ theme(legend.position = "none") + theme( panel.background = element_blank() 
+element_rect(fill = "transparent",colour = NA)#, # or element_blank() #
+panel.grid.minor = element_blank(), # panel.grid.major = element_blank(), 
+plot.background = element_rect(fill = "transparent",colour = NA))
+
+# Comparing Pint Estimates
+ggplot( aes(x=medv, y=fit.3$fitted.values), data=BostonHousing ) + geom_point() + 
+coord_equal( ylim=c(0,70), xlim=c(0,70) ) + geom_abline( slope=1, intercept=0, color="red") 
++ xlab( "Median Value of Home") + ylab("Estimated Median Value of Home") + theme( plot.background = element_blank() )
+
+# fit.3 doesn't seem to fit well in the very high value range
+
+# Stepwise
+f <- stepAIC( fit.3, scope=list(lower=medv~1, upper=medv~.), direction="backward" )
 ```
 
 
